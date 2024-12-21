@@ -2,7 +2,7 @@
 
 # Variables
 INSTALL_DIR="/etc/psiphon"
-BINARY_URL="https://raw.githubusercontent.com/090ebier/PsiphonLinux/refs/heads/main/archive/psiphon-tunnel-core-x86_64"
+BINARY_URL="https://raw.githubusercontent.com/090ebier/PsiphonLinux/refs/heads/main/psiphon-tunnel-core-x86_64"
 CONFIG_URL="https://raw.githubusercontent.com/090ebier/PsiphonLinux/main/psiphon.config"
 STARTUP_SCRIPT_URL="https://raw.githubusercontent.com/090ebier/PsiphonLinux/main/psiphon"
 SERVICE_FILE="/etc/systemd/system/psiphon.service"
@@ -45,22 +45,6 @@ systemctl daemon-reload
 systemctl enable psiphon
 systemctl start psiphon
 
-# Create a wrapper script for manual service management
-echo "Creating wrapper script..."
-echo '#!/bin/bash' > /usr/bin/psiphon
-echo 'if [ "$1" == "start" ]; then' >> /usr/bin/psiphon
-echo '  sudo systemctl start psiphon' >> /usr/bin/psiphon
-echo '  echo "Psiphon service started."' >> /usr/bin/psiphon
-echo 'elif [ "$1" == "stop" ]; then' >> /usr/bin/psiphon
-echo '  sudo systemctl stop psiphon' >> /usr/bin/psiphon
-echo '  echo "Psiphon service stopped."' >> /usr/bin/psiphon
-echo 'elif [ "$1" == "status" ]; then' >> /usr/bin/psiphon
-echo '  sudo systemctl status psiphon' >> /usr/bin/psiphon
-echo 'else' >> /usr/bin/psiphon
-echo '  echo "Usage: psiphon [start|stop|status]"' >> /usr/bin/psiphon
-echo 'fi' >> /usr/bin/psiphon
-
-chmod +x /usr/bin/psiphon
 
 # Post-install checks
 echo "Running post-install checks..."
