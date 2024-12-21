@@ -68,7 +68,6 @@ psiphon [command] [arguments]
 - **httpport [PORT]** - Change the HTTP proxy port. Replace `[PORT]` with the desired port number (e.g., `8081`).
 - **socksport [PORT]** - Change the SOCKS proxy port. Replace `[PORT]` with the desired port number (e.g., `1081`).
 - **restart** - Restart the Psiphon service to apply any changes.
-- **-h** or **--help** - Display the help message.
 
 ### Example Usage:
 
@@ -117,4 +116,4 @@ sudo psiphon restart
 Display the help message to see all available commands:
 
 ```bash
-sudo psiphon --help
+sudo psiphon 
