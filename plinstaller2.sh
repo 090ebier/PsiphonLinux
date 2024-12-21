@@ -1,25 +1,25 @@
 #! /bin/bash
 
 # Variables
-INSTALL_DIR="/etc/psiphon"
-BINARY_URL="https://raw.githubusercontent.com/090ebier/PsiphonLinux/refs/heads/main/psiphon-tunnel-core-x86_64"
-CONFIG_URL="https://raw.githubusercontent.com/090ebier/PsiphonLinux/main/psiphon.config"
-STARTUP_SCRIPT_URL="https://raw.githubusercontent.com/090ebier/PsiphonLinux/main/psiphon"
-SERVICE_FILE="/etc/systemd/system/psiphon.service"
+INSTALL_DIR="/etc/psiphon"  # پوشه نصب برای فایل‌ها
+BINARY_URL="https://raw.githubusercontent.com/090ebier/PsiphonLinux/refs/heads/main/psiphon-tunnel-core-x86_64"  # لینک دانلود فایل باینری
+CONFIG_URL="https://raw.githubusercontent.com/090ebier/PsiphonLinux/main/psiphon.config"  # لینک دانلود فایل تنظیمات
+STARTUP_SCRIPT_URL="https://raw.githubusercontent.com/090ebier/PsiphonLinux/main/psiphon"  # لینک دانلود اسکریپت راه‌اندازی
+SERVICE_FILE="/etc/systemd/system/psiphon.service"  # فایل سرویس systemd
 
 # Create necessary directories
-mkdir -p "$INSTALL_DIR"
+mkdir -p "$INSTALL_DIR"  # ایجاد دایرکتوری برای نصب فایل‌ها
 
 # Download necessary scripts and files
 echo "Starting downloads..."
-wget -P "$INSTALL_DIR" "$BINARY_URL" --quiet
-wget -P "$INSTALL_DIR" "$CONFIG_URL" --quiet
-wget -P /usr/bin/ "$STARTUP_SCRIPT_URL" --quiet
+wget -P "$INSTALL_DIR" "$BINARY_URL" --quiet  # دانلود فایل باینری
+wget -P "$INSTALL_DIR" "$CONFIG_URL" --quiet  # دانلود فایل تنظیمات
+wget -P /usr/bin/ "$STARTUP_SCRIPT_URL" --quiet  # دانلود اسکریپت راه‌اندازی به /usr/bin
 echo "Downloads finished."
 
 # Set permissions
-chmod +x "$INSTALL_DIR/psiphon-tunnel-core-x86_64"
-chmod +x /usr/bin/psiphon
+chmod +x "$INSTALL_DIR/psiphon-tunnel-core-x86_64"  # دادن دسترسی اجرایی به باینری
+chmod +x /usr/bin/psiphon  # دادن دسترسی اجرایی به اسکریپت راه‌اندازی
 
 # Create systemd service file
 echo "Creating Psiphon service..."
@@ -37,14 +37,12 @@ User=root
 WantedBy=multi-user.target
 EOF
 
-
 # Reload systemd to recognize the new service
 systemctl daemon-reload
 
 # Enable and start the Psiphon service
 systemctl enable psiphon
 systemctl start psiphon
-
 
 # Post-install checks
 echo "Running post-install checks..."
@@ -75,4 +73,4 @@ fi
 
 # Finish installation
 echo "Installation completed. Psiphon service is now running in the background."
-echo "You can manage the service with 'sudo psiphon [start|stop|status]'."
+echo "You can manage the service with 'sudo systemctl [start|stop|status] psiphon'."
