@@ -49,6 +49,7 @@ systemctl start psiphon
 echo "Creating wrapper script..."
 cat <<EOF > /usr/bin/psiphon
 #!/bin/bash
+
 if [ "$1" == "start" ]; then
   sudo systemctl start psiphon
   echo "Psiphon service started."
@@ -60,6 +61,7 @@ elif [ "$1" == "status" ]; then
 else
   echo "Usage: psiphon [start|stop|status]"
 fi
+
 EOF
 chmod +x /usr/bin/psiphon
 
