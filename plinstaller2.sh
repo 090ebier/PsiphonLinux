@@ -29,13 +29,14 @@ Description=Psiphon Service
 After=network.target
 
 [Service]
-ExecStart=$INSTALL_DIR/psiphon-tunnel-core-x86_64 -config "$INSTALL_DIR/psiphon.config"
+ExecStart=/etc/psiphon/psiphon-tunnel-core-x86_64 -config /etc/psiphon/psiphon.config
 Restart=always
-User=nobody
+User=root
 
 [Install]
 WantedBy=multi-user.target
 EOF
+
 
 # Reload systemd to recognize the new service
 systemctl daemon-reload
