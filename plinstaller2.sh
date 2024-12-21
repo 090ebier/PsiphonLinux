@@ -44,6 +44,24 @@ systemctl daemon-reload
 systemctl enable psiphon
 systemctl start psiphon
 
+# Create a wrapper script for manual service management
+echo "Creating wrapper script..."
+cat <<EOF > /usr/bin/psiphon
+#!/bin/bash
+if [ "$1" == "start" ]; then
+  sudo systemctl start psiphon
+  echo "Psiphon service started."
+elif [ "$1" == "stop" ]; then
+  sudo systemctl stop psiphon
+  echo "Psiphon service stopped."
+elif [ "$1" == "status" ]; then
+  sudo systemctl status psiphon
+else
+  echo "Usage: psiphon [start|stop|status]"
+fi
+EOF
+chmod +x /usr/bin/psiphon
+
 # Post-install checks
 echo "Running post-install checks..."
 
@@ -73,4 +91,4 @@ fi
 
 # Finish installation
 echo "Installation completed. Psiphon service is now running in the background."
-echo "You can manage the service with 'sudo systemctl [start|stop|restart|status] psiphon'."
+echo "You can manage the service with 'sudo psiphon [start|stop|status]'."
