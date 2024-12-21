@@ -1,25 +1,25 @@
 #! /bin/bash
 
 # Variables
-INSTALL_DIR="/etc/psiphon"  # پوشه نصب برای فایل‌ها
-BINARY_URL="https://raw.githubusercontent.com/090ebier/PsiphonLinux/refs/heads/main/psiphon-tunnel-core-x86_64"  # لینک دانلود فایل باینری
-CONFIG_URL="https://raw.githubusercontent.com/090ebier/PsiphonLinux/main/psiphon.config"  # لینک دانلود فایل تنظیمات
-STARTUP_SCRIPT_URL="https://raw.githubusercontent.com/090ebier/PsiphonLinux/main/psiphon"  # لینک دانلود اسکریپت راه‌اندازی
-SERVICE_FILE="/etc/systemd/system/psiphon.service"  # فایل سرویس systemd
+INSTALL_DIR="/etc/psiphon"
+BINARY_URL="https://raw.githubusercontent.com/090ebier/PsiphonLinux/refs/heads/main/psiphon-tunnel-core-x86_64"
+CONFIG_URL="https://raw.githubusercontent.com/090ebier/PsiphonLinux/main/psiphon.config"
+STARTUP_SCRIPT_URL="https://raw.githubusercontent.com/090ebier/PsiphonLinux/main/psiphon"
+SERVICE_FILE="/etc/systemd/system/psiphon.service"
 
 # Create necessary directories
-mkdir -p "$INSTALL_DIR"  # ایجاد دایرکتوری برای نصب فایل‌ها
+mkdir -p "$INSTALL_DIR"
 
 # Download necessary scripts and files
 echo "Starting downloads..."
-wget -P "$INSTALL_DIR" "$BINARY_URL" --quiet  # دانلود فایل باینری
-wget -P "$INSTALL_DIR" "$CONFIG_URL" --quiet  # دانلود فایل تنظیمات
-wget -P /usr/bin/ "$STARTUP_SCRIPT_URL" --quiet  # دانلود اسکریپت راه‌اندازی به /usr/bin
+wget -P "$INSTALL_DIR" "$BINARY_URL" --quiet
+wget -P "$INSTALL_DIR" "$CONFIG_URL" --quiet
+wget -P /usr/bin/ "$STARTUP_SCRIPT_URL" --quiet
 echo "Downloads finished."
 
 # Set permissions
-chmod +x "$INSTALL_DIR/psiphon-tunnel-core-x86_64"  # دادن دسترسی اجرایی به باینری
-chmod +x /usr/bin/psiphon  # دادن دسترسی اجرایی به اسکریپت راه‌اندازی
+chmod +x "$INSTALL_DIR/psiphon-tunnel-core-x86_64"
+chmod +x /usr/bin/psiphon
 
 # Create systemd service file
 echo "Creating Psiphon service..."
