@@ -2,7 +2,7 @@
 
 # Variables
 INSTALL_DIR="/etc/psiphon"
-BINARY_URL="https://raw.githubusercontent.com/090ebier/psiphon-tunnel-core-binaries/master/linux/psiphon-tunnel-core-x86_64"
+BINARY_URL="https://raw.githubusercontent.com/090ebier/PsiphonLinux/refs/heads/main/archive/psiphon-tunnel-core-x86_64"
 CONFIG_URL="https://raw.githubusercontent.com/090ebier/PsiphonLinux/main/psiphon.config"
 STARTUP_SCRIPT_URL="https://raw.githubusercontent.com/090ebier/PsiphonLinux/main/psiphon"
 SERVICE_FILE="/etc/systemd/system/psiphon.service"
