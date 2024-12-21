@@ -1,0 +1,116 @@
+#!/bin/bash
+
+CONFIG_FILE="/etc/psiphon/psiphon.config"
+
+# Function to display help message
+show_help() {
+  echo "Usage: psiphon [start|stop|status|region|httpport|socksport]"
+  echo
+  echo "start         - Start the Psiphon service."
+  echo "stop          - Stop the Psiphon service."
+  echo "restart       - Restart the Psiphon service."
+  echo "status        - Show the status of the Psiphon service."
+  echo "region [code] - Set the EgressRegion to the specified region code."
+  echo "httpport [port] - Set the LocalHttpProxyPort to the specified port."
+  echo "socksport [port] - Set the LocalSocksProxyPort to the specified port."
+  echo
+  echo "Valid region codes are: AT, BE, BG, CA, CH, CZ, DE, DK, EE, ES, FI, FR, GB, HU, IE, IN, IT, JP, LV, NL, NO, PL, RO, RS, SE, SG, SK, US"
+  echo "Port numbers must be between 1024 and 65535."
+}
+
+# Function to restart the Psiphon service
+restart_service() {
+  sudo systemctl restart psiphon
+  echo "Psiphon service has been restarted."
+}
+
+# Function to update the region in the config file
+update_region() {
+  local new_region=$1
+  local valid_regions=("AT" "BE" "BG" "CA" "CH" "CZ" "DE" "DK" "EE" "ES" "FI" "FR" "GB" "HU" "IE" "IN" "IT" "JP" "LV" "NL" "NO" "PL" "RO" "RS" "SE" "SG" "SK" "US")
+  
+  if [[ " ${valid_regions[@]} " =~ " ${new_region} " ]]; then
+    if [ -f "$CONFIG_FILE" ]; then
+      echo "Updating region to $new_region..."
+      sudo sed -i "s/\"EgressRegion\":\"[^\"]*\"/\"EgressRegion\":\"$new_region\"/" "$CONFIG_FILE"
+      echo "Region updated to $new_region."
+      restart_service
+    else
+      echo "Error: Config file not found!"
+    fi
+  else
+    echo "Invalid region: $new_region"
+    echo "Valid regions are: ${valid_regions[@]}"
+  fi
+}
+
+# Function to update the HTTP proxy port
+update_http_port() {
+  local new_http_port=$1
+  if [[ "$new_http_port" =~ ^[0-9]+$ ]] && [ "$new_http_port" -ge 1024 ] && [ "$new_http_port" -le 65535 ]; then
+    if [ -f "$CONFIG_FILE" ]; then
+      echo "Updating HTTP proxy port to $new_http_port..."
+      sudo sed -i "s/\"LocalHttpProxyPort\":[0-9]*/\"LocalHttpProxyPort\":$new_http_port/" "$CONFIG_FILE"
+      echo "HTTP proxy port updated to $new_http_port."
+      restart_service
+    else
+      echo "Error: Config file not found!"
+    fi
+  else
+    echo "Invalid HTTP port: $new_http_port"
+    echo "Port must be a number between 1024 and 65535."
+  fi
+}
+
+# Function to update the SOCKS proxy port
+update_socks_port() {
+  local new_socks_port=$1
+  if [[ "$new_socks_port" =~ ^[0-9]+$ ]] && [ "$new_socks_port" -ge 1024 ] && [ "$new_socks_port" -le 65535 ]; then
+    if [ -f "$CONFIG_FILE" ]; then
+      echo "Updating SOCKS proxy port to $new_socks_port..."
+      sudo sed -i "s/\"LocalSocksProxyPort\":[0-9]*/\"LocalSocksProxyPort\":$new_socks_port/" "$CONFIG_FILE"
+      echo "SOCKS proxy port updated to $new_socks_port."
+      restart_service
+    else
+      echo "Error: Config file not found!"
+    fi
+  else
+    echo "Invalid SOCKS port: $new_socks_port"
+    echo "Port must be a number between 1024 and 65535."
+  fi
+}
+
+
+# Check for commands
+if [ "$1" == "start" ]; then
+  sudo systemctl start psiphon
+  echo "Psiphon service started."
+elif [ "$1" == "stop" ]; then
+  sudo systemctl stop psiphon
+  echo "Psiphon service stopped."
+elif [ "$1" == "restart" ]; then
+  sudo systemctl restart psiphon
+  echo "Psiphon service restarted."
+elif [ "$1" == "status" ]; then
+  sudo systemctl status psiphon
+elif [ "$1" == "region" ]; then
+  if [ -z "$2" ]; then
+    echo "Please provide a region. Usage: psiphon region [region_code]"
+  else
+    update_region "$2"
+  fi
+elif [ "$1" == "httpport" ]; then
+  if [ -z "$2" ]; then
+    echo "Please provide an HTTP port. Usage: psiphon httpport [port_number]"
+  else
+    update_http_port "$2"
+  fi
+elif [ "$1" == "socksport" ]; then
+  if [ -z "$2" ]; then
+    echo "Please provide a SOCKS port. Usage: psiphon socksport [port_number]"
+  else
+    update_socks_port "$2"
+  fi
+else
+  show_help
+fi
