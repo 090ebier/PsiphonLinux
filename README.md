@@ -24,7 +24,7 @@ This script provides a convenient way to control and configure the Psiphon servi
 To install the Psiphon service and control script, execute the following command:
 
 ```bash
-curl -s https://raw.githubusercontent.com/090ebier/PsiphonLinux/refs/heads/main/plinstaller2.sh | sudo bash
+curl -s https://raw.githubusercontent.com/090ebier/PsiphonLinux/refs/heads/main/Pinstaller.sh | sudo bash
 ```
 
 This command will:
