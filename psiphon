@@ -1,10 +1,12 @@
 #!/bin/bash
 
 CONFIG_FILE="/etc/psiphon/psiphon.config"
+SERVICE_FILE="/etc/systemd/system/psiphon.service"
+INSTALL_DIR="/etc/psiphon"
 
 # Function to display help message
 show_help() {
-  echo "Usage: psiphon [start|stop|status|region|httpport|socksport]"
+  echo "Usage: psiphon [start|stop|status|region|httpport|socksport|uninstall]"
   echo
   echo "start         - Start the Psiphon service."
   echo "stop          - Stop the Psiphon service."
@@ -13,6 +15,7 @@ show_help() {
   echo "region [code] - Set the EgressRegion to the specified region code."
   echo "httpport [port] - Set the LocalHttpProxyPort to the specified port."
   echo "socksport [port] - Set the LocalSocksProxyPort to the specified port."
+  echo "uninstall     - Uninstall Psiphon."
   echo
   echo "Valid region codes are: AT, BE, BG, CA, CH, CZ, DE, DK, EE, ES, FI, FR, GB, HU, IE, IN, IT, JP, LV, NL, NO, PL, RO, RS, SE, SG, SK, US"
   echo "Port numbers must be between 1024 and 65535."
@@ -80,6 +83,32 @@ update_socks_port() {
   fi
 }
 
+# Function to uninstall Psiphon
+uninstall() {
+    echo "Uninstalling Psiphon..."
+
+    # Stop and disable the Psiphon service
+    sudo systemctl stop psiphon
+    sudo systemctl disable psiphon
+
+    # Remove systemd service file
+    sudo rm -f "$SERVICE_FILE"
+
+    # Remove Psiphon binary and configuration files
+    sudo rm -f "$INSTALL_DIR/psiphon-tunnel-core-x86_64"
+    sudo rm -f "$INSTALL_DIR/psiphon.config"
+
+    # Remove Psiphon startup script
+    sudo rm -f /usr/bin/psiphon
+
+    # Optionally, remove the installation directory
+    sudo rmdir "$INSTALL_DIR"
+
+    # Reload systemd to remove the service
+    sudo systemctl daemon-reload
+
+    echo "Psiphon uninstalled successfully."
+}
 
 # Check for commands
 if [ "$1" == "start" ]; then
@@ -89,8 +118,7 @@ elif [ "$1" == "stop" ]; then
   sudo systemctl stop psiphon
   echo "Psiphon service stopped."
 elif [ "$1" == "restart" ]; then
-  sudo systemctl restart psiphon
-  echo "Psiphon service restarted."
+  restart_service
 elif [ "$1" == "status" ]; then
   sudo systemctl status psiphon
 elif [ "$1" == "region" ]; then
@@ -111,6 +139,8 @@ elif [ "$1" == "socksport" ]; then
   else
     update_socks_port "$2"
   fi
+elif [ "$1" == "uninstall" ]; then
+  uninstall
 else
   show_help
 fi
