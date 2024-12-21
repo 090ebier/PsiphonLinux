@@ -47,22 +47,19 @@ systemctl start psiphon
 
 # Create a wrapper script for manual service management
 echo "Creating wrapper script..."
-cat <<EOF > /usr/bin/psiphon
-#!/bin/bash
+echo '#!/bin/bash' > /usr/bin/psiphon
+echo 'if [ "$1" == "start" ]; then' >> /usr/bin/psiphon
+echo '  sudo systemctl start psiphon' >> /usr/bin/psiphon
+echo '  echo "Psiphon service started."' >> /usr/bin/psiphon
+echo 'elif [ "$1" == "stop" ]; then' >> /usr/bin/psiphon
+echo '  sudo systemctl stop psiphon' >> /usr/bin/psiphon
+echo '  echo "Psiphon service stopped."' >> /usr/bin/psiphon
+echo 'elif [ "$1" == "status" ]; then' >> /usr/bin/psiphon
+echo '  sudo systemctl status psiphon' >> /usr/bin/psiphon
+echo 'else' >> /usr/bin/psiphon
+echo '  echo "Usage: psiphon [start|stop|status]"' >> /usr/bin/psiphon
+echo 'fi' >> /usr/bin/psiphon
 
-if [ "$1" == "start" ]; then
-  sudo systemctl start psiphon
-  echo "Psiphon service started."
-elif [ "$1" == "stop" ]; then
-  sudo systemctl stop psiphon
-  echo "Psiphon service stopped."
-elif [ "$1" == "status" ]; then
-  sudo systemctl status psiphon
-else
-  echo "Usage: psiphon [start|stop|status]"
-fi
-
-EOF
 chmod +x /usr/bin/psiphon
 
 # Post-install checks
